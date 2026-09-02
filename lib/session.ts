@@ -7,8 +7,13 @@ import type { Role, SessionPayload } from "./types";
 const COOKIE = "homework_session";
 const MAX_AGE_SEC = 60 * 60 * 24 * 30;
 
+// Use TMPDIR on Netlify/production (serverless: read-write only in tmp dir), fall back to ./data in dev
+const isNetlify = process.env.NETLIFY || process.env.NODE_ENV === "production";
+const tmpDir = process.env.TMPDIR || "/tmp";
+const dataDir = isNetlify ? path.join(tmpDir, "homework-check") : path.join(process.cwd(), "data");
+
 async function secret(): Promise<string> {
-  const dir = path.join(process.cwd(), "data");
+  const dir = dataDir;
   const file = path.join(dir, "secret.txt");
   await mkdir(dir, { recursive: true });
   try {

@@ -41,7 +41,7 @@ export async function POST(
     const dir = uploadsDir();
     await mkdir(dir, { recursive: true });
     const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(dir, filename), buffer);
+    await writeFile(path.join(/*turbopackIgnore: true*/ dir, filename), buffer);
 
     const now = new Date().toISOString();
     const updated = await updateStore((store) => {

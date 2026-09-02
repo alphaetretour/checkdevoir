@@ -2,7 +2,10 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { StoreData } from "./types";
 
-const dataDir = path.join(process.cwd(), "data");
+// Use TMPDIR on Netlify/production (serverless: read-write only in tmp dir), fall back to ./data in dev
+const isNetlify = process.env.NETLIFY || process.env.NODE_ENV === "production";
+const tmpDir = process.env.TMPDIR || "/tmp";
+const dataDir = isNetlify ? path.join(tmpDir, "homework-check") : path.join(process.cwd(), "data");
 const storePath = path.join(dataDir, "store.json");
 const tmpPath = path.join(dataDir, "store.json.tmp");
 
@@ -29,8 +32,7 @@ export async function readStore(): Promise<StoreData> {
 export async function writeStore(data: StoreData): Promise<void> {
   await ensureDir();
   const json = JSON.stringify(data, null, 2);
-  await writeFile(tmpPath, json, "utf8");
-  await rename(tmpPath, storePath);
+  await writeFile(storePath, json, "utf8");
 }
 
 export async function updateStore(

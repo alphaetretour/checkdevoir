@@ -29,7 +29,7 @@ export async function DELETE(
 
     if (photoFilename) {
       try {
-        await unlink(path.join(uploadsDir(), photoFilename));
+        await unlink(path.join(/*turbopackIgnore: true*/ uploadsDir(), photoFilename));
       } catch {
         // Photo already gone; the homework is still removed from the list.
       }
