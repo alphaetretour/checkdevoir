@@ -16,7 +16,7 @@ export async function GET(
     if (!item?.photoFilename) {
       return NextResponse.json({ error: "Photo introuvable." }, { status: 404 });
     }
-    const filePath = path.join(uploadsDir(), item.photoFilename);
+    const filePath = path.join(/*turbopackIgnore: true*/ uploadsDir(), item.photoFilename);
     const data = await readFile(filePath);
     const ext = path.extname(item.photoFilename).toLowerCase();
     const type =

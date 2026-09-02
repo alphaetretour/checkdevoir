@@ -7,8 +7,11 @@ import type { Role, SessionPayload } from "./types";
 const COOKIE = "homework_session";
 const MAX_AGE_SEC = 60 * 60 * 24 * 30;
 
+// Use /tmp in production (serverless: read-write only in /tmp), fall back to ./data in dev
+const dataDir = process.env.NODE_ENV === "production" ? path.join("/tmp", "homework-check") : path.join(process.cwd(), "data");
+
 async function secret(): Promise<string> {
-  const dir = path.join(process.cwd(), "data");
+  const dir = dataDir;
   const file = path.join(dir, "secret.txt");
   await mkdir(dir, { recursive: true });
   try {

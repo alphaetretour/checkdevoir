@@ -2,7 +2,8 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { StoreData } from "./types";
 
-const dataDir = path.join(process.cwd(), "data");
+// Use /tmp in production (serverless: read-write only in /tmp), fall back to ./data in dev
+const dataDir = process.env.NODE_ENV === "production" ? path.join("/tmp", "homework-check") : path.join(process.cwd(), "data");
 const storePath = path.join(dataDir, "store.json");
 const tmpPath = path.join(dataDir, "store.json.tmp");
 
