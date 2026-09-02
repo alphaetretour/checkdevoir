@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { CameraButton } from "@/components/camera-button";
 import { GhostButton, Shell, StatusBadge, logout } from "@/components/shell";
-import type { PublicHomework } from "@/lib/types";
+import { FAMILY_SAFETY_URL, type PublicHomework } from "@/lib/types";
 import { SUBJECTS } from "@/lib/types";
 
 export function ChildHome({
@@ -15,6 +15,7 @@ export function ChildHome({
   homework: PublicHomework[];
   onChange: () => void;
 }) {
+  const [showHistory, setShowHistory] = useState(false);
   return (
     <Shell
       eyebrow={`${family.name} · espace enfant`}
@@ -23,23 +24,48 @@ export function ChildHome({
     >
       <HomeworkForm onCreated={onChange} />
       <section className="mt-10">
-        <h2 className="display text-2xl">Tes devoirs</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="display text-2xl">Tes devoirs</h2>
+          <button
+            type="button"
+            onClick={() => setShowHistory((v) => !v)}
+            className="rounded-2xl border border-line px-4 py-2 text-sm font-semibold"
+          >
+            {showHistory ? "Masquer anciens devoirs" : "Voir anciens devoirs"}
+          </button>
+        </div>
         <p className="mt-1 text-sm text-muted">
           Quand un devoir est fini, prends une photo : elle part sur le compte parent.
         </p>
-        <ul className="mt-5 space-y-4">
-          {homework.length === 0 ? (
-            <li className="rounded-3xl border border-dashed border-line bg-card/70 p-6 text-muted">
-              Aucun devoir pour l&apos;instant. Ajoute le premier ci-dessus.
-            </li>
-          ) : (
-            homework.map((item) => (
-              <li key={item.id}>
-                <HomeworkCard item={item} onChange={onChange} />
+        {showHistory ? (
+          <ul className="mt-5 space-y-4">
+            {homework.length === 0 ? (
+              <li className="rounded-3xl border border-dashed border-line bg-card/70 p-6 text-muted">
+                Aucun devoir pour l&apos;instant. Ajoute le premier ci-dessus.
               </li>
-            ))
-          )}
-        </ul>
+            ) : (
+              homework.map((item) => (
+                <li key={item.id}>
+                  <HomeworkCard item={item} onChange={onChange} />
+                </li>
+              ))
+            )}
+          </ul>
+        ) : (
+          <ul className="mt-5 space-y-4">
+            {homework.filter(item => item.status === "todo" || item.status === "submitted").length === 0 ? (
+              <li className="rounded-3xl border border-dashed border-line bg-card/70 p-6 text-muted">
+                Aucun devoir en cours.
+              </li>
+            ) : (
+              homework.filter(item => item.status === "todo" || item.status === "submitted").map((item) => (
+                <li key={item.id}>
+                  <HomeworkCard item={item} onChange={onChange} />
+                </li>
+              ))
+            )}
+          </ul>
+        )}
       </section>
     </Shell>
   );

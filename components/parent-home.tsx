@@ -13,10 +13,12 @@ export function ParentHome({
   homework: PublicHomework[];
   onChange: () => void;
 }) {
+  const [showHistory, setShowHistory] = useState(false);
   const pending = useMemo(
     () => homework.filter((item) => item.status === "submitted"),
     [homework],
   );
+  const isIOS = typeof window !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   return (
     <Shell
@@ -29,25 +31,50 @@ export function ParentHome({
         Microsoft Family Safety pour ajouter le temps d&apos;écran (Microsoft ne
         propose pas d&apos;API officielle pour le faire automatiquement).
       </p>
-      {pending.length > 0 ? (
-        <p className="mb-6 rounded-2xl bg-[#dce8f4] px-4 py-3 text-sm font-medium text-sky">
-          {pending.length} devoir{pending.length > 1 ? "s" : ""} en attente de
-          vérification.
-        </p>
-      ) : null}
-      <ul className="space-y-4">
-        {homework.length === 0 ? (
-          <li className="rounded-3xl border border-dashed border-line bg-card/70 p-6 text-muted">
-            Aucun devoir pour le moment.
-          </li>
-        ) : (
-          homework.map((item) => (
-            <li key={item.id}>
-              <ParentCard item={item} childName={family.childName} onChange={onChange} />
+      <div className="mb-6 flex items-center gap-3">
+        {pending.length > 0 ? (
+          <p className="rounded-2xl bg-[#dce8f4] px-4 py-3 text-sm font-medium text-sky">
+            {pending.length} devoir{pending.length > 1 ? "s" : ""} en attente de
+            vérification.
+          </p>
+        ) : null}
+        <button
+          type="button"
+          onClick={() => setShowHistory((v) => !v)}
+          className="rounded-2xl border border-line px-4 py-2 text-sm font-semibold"
+        >
+          {showHistory ? "Masquer anciens devoirs" : "Voir anciens devoirs"}
+        </button>
+      </div>
+      {showHistory ? (
+        <ul className="space-y-4">
+          {homework.length === 0 ? (
+            <li className="rounded-3xl border border-dashed border-line bg-card/70 p-6 text-muted">
+              Aucun devoir pour le moment.
             </li>
-          ))
-        )}
-      </ul>
+          ) : (
+            homework.map((item) => (
+              <li key={item.id}>
+                <ParentCard item={item} childName={family.childName} onChange={onChange} />
+              </li>
+            ))
+          )}
+        </ul>
+      ) : (
+        <ul className="space-y-4">
+          {homework.filter(item => item.status === "submitted" || item.status === "todo").length === 0 ? (
+            <li className="rounded-3xl border border-dashed border-line bg-card/70 p-6 text-muted">
+              Aucun devoir en attente.
+            </li>
+          ) : (
+            homework.filter(item => item.status === "submitted" || item.status === "todo").map((item) => (
+              <li key={item.id}>
+                <ParentCard item={item} childName={family.childName} onChange={onChange} />
+              </li>
+            ))
+          )}
+        </ul>
+      )}
     </Shell>
   );
 }
@@ -191,14 +218,25 @@ function ParentCard({
                 </option>
               ))}
             </select>
-            <button
-              type="button"
-              disabled={busy}
-              onClick={() => void markScreenTime()}
-              className="rounded-2xl bg-sky px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-            >
-              Ouvrir Family Safety
-            </button>
+            {typeof window !== "undefined" && /iPad|iPhone|iPod/.test(navigator.userAgent) ? (
+              <a
+                href="microsoft-familysafety://"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-2xl bg-sky px-4 py-2 text-sm font-semibold text-white"
+              >
+                Ouvrir Family Safety
+              </a>
+            ) : (
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => void markScreenTime()}
+                className="rounded-2xl bg-sky px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+              >
+                Ouvrir Family Safety
+              </button>
+            )}
             <a
               href={FAMILY_SAFETY_URL}
               target="_blank"
