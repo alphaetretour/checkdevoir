@@ -1,0 +1,103 @@
+================================================================================
+                    HOMEWORK CHECK - INSTRUCTIONS D'INSTALLATION
+================================================================================
+
+Ce dossier contient le projet Homework Check, une application pour gérer
+les devoirs des enfants avec validation parentale et temps d'écran.
+
+================================================================================
+                           OPTION 1: HÉBERGER SUR NETLIFY
+================================================================================
+
+1. CRÉER UN COMPTE NETLIFY (gratuit)
+   - Allez sur https://app.netlify.com/signup
+   - Inscrivez-vous avec votre compte GitHub ou email
+
+2. IMPORTER LE PROJET
+   - Cliquez sur "Add new site" → "Import an existing project"
+   - Sélectionnez GitHub et autorisez Netlify à accéder à votre compte
+   - Choisissez le dépôt : alphaetretour/checkdevoir
+   - Sélectionnez la branche : main
+
+3. CONFIGURATION AUTOMATIQUE
+   - Netlify détecte automatiquement Next.js
+   - Commandes de build : npm run build
+   - Dossier de publication : .next
+   - Cliquez sur "Deploy site"
+
+4. ACCÈS À L'APPLICATION
+   - Une fois déployé, votre site sera disponible à une URL comme :
+     https://votre-nom.netlify.app
+   - Connectez-vous avec le code PIN parent : 1234 (par défaut)
+
+5. PERSONNALISATION (optionnel)
+   - Pour changer le PIN, modifiez le code dans app/api/setup/route.ts
+   - Pour modifier la famille, utilisez l'interface de configuration
+
+================================================================================
+                          OPTION 2: DÉVELOPPEMENT LOCAL
+================================================================================
+
+1. EXÉCUTER LE SCRIPT D'INSTALLATION (Windows)
+   - Double-cliquez sur INSTALL.bat
+   - Suivez les instructions à l'écran
+   - Ce script installe Git, Node.js et les dépendances automatiquement
+
+2. OU INSTALLER MANUELLEMENT
+   a) Installer Git : https://git-scm.com/download/win
+   b) Installer Node.js (version 18+) : https://nodejs.org/
+   c) Ouvrir le terminal dans ce dossier et exécuter :
+      npm install
+
+3. LANCER L'APPLICATION
+   - Dans le terminal, exécutez :
+     npm run dev
+   - Ouvrez votre navigateur à l'adresse : http://localhost:3000
+
+4. ARRÊTER L'APPLICATION
+   - Dans le terminal, appuyez sur Ctrl + C
+
+================================================================================
+                              STRUCTURE DU PROJET
+================================================================================
+
+app/           - Routes et API endpoints
+components/   - Composants React (interface utilisateur)
+lib/          - Logique métier et types
+public/       - Fichiers statiques
+
+Fichiers importants :
+- app/api/homework/route.ts    - Gestion des devoirs
+- app/api/setup/route.ts       - Configuration initiale
+- components/child-home.tsx    - Interface enfant
+- components/parent-home.tsx   - Interface parent
+
+================================================================================
+                              DÉPANNAGE
+================================================================================
+
+PROBLÈME : Le build échoue sur Netlify
+SOLUTION :
+  - Vérifiez que le dépôt est public (Netlify gratuit ne supporte pas les repos privés)
+  - Dans Netlify, allez dans Site settings → Build & deploy
+  - Vérifiez que la branche est bien "main"
+
+PROBLÈME : Les devoirs ne s'enregistrent pas
+SOLUTION :
+  - Sur Netlify, le stockage utilise /tmp (serverless)
+  - Si ça ne marche pas, vérifiez les logs dans Netlify → Deploys
+
+PROBLÈME : Le bouton Family Safety ne fonctionne pas sur iOS
+SOLUTION :
+  - L'app utilise le deep link microsoft-familysafety://
+  - Si l'app n'est pas installée, iOS redirige vers l'App Store
+
+================================================================================
+                              CONTACT
+================================================================================
+
+Pour toute question ou problème, contactez :
+- Le créateur original du projet
+- Ou consultez la documentation Next.js : https://nextjs.org/docs
+
+================================================================================
