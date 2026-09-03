@@ -13,7 +13,7 @@ Application web locale pour l’enfant et le parent :
 
 Microsoft ne fournit **pas d’API publique** pour créditer du temps d’écran depuis une autre application. Homework Check ouvre le site officiel [Family Safety](https://account.microsoft.com/family) et note le bonus une fois que tu l’as ajouté à la main. C’est le seul moyen fiable et autorisé.
 
-D'autre cont
+D'autre contrôle parentale sont en cours.
 
 En mode local
 
